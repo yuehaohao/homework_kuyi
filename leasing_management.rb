@@ -1,4 +1,11 @@
-# This class should read the input and return a satified result
-class LeasingManagement
-  def manage_leasing(input); end
+require './leasing'
+
+leasing = Leasing.new(ARGV[0] || '')
+
+if leasing.errors.length.positive?
+  leasing.errors.each do |error|
+    puts error.message
+  end
+else
+  puts leasing.to_s
 end
