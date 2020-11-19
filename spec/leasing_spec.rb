@@ -32,4 +32,82 @@ RSpec.describe Leasing do
       expect(leasing.payment_period).to eq(3)
     end
   end
+
+  describe 'to_s' do
+    it 'should output 1 month rent period infomation' do
+      leasing = Leasing.new('20200101, 20200331, 1000, 1')
+      expected_result =
+        "leasing periods:\n" \
+        "1.\n" \
+        "range: 2020-01-01 ~ 2020-01-31\n" \
+        "rent: 1000\n" \
+        "payment_date: 2020-01-01\n" \
+        "2.\n" \
+        "range: 2020-02-01 ~ 2020-02-29\n" \
+        "rent: 1000\n" \
+        "payment_date: 2020-01-15\n" \
+        "3.\n" \
+        "range: 2020-03-01 ~ 2020-03-31\n" \
+        "rent: 1000\n" \
+        "payment_date: 2020-02-15\n"
+      expect(leasing.to_s).to eq(expected_result)
+    end
+
+    it 'should output 2 month rent period infomation' do
+      leasing = Leasing.new('20200101, 20200630, 1000, 2')
+      expected_result =
+        "leasing periods:\n" \
+        "1.\n" \
+        "range: 2020-01-01 ~ 2020-02-29\n" \
+        "rent: 2000\n" \
+        "payment_date: 2020-01-01\n" \
+        "2.\n" \
+        "range: 2020-03-01 ~ 2020-04-30\n" \
+        "rent: 2000\n" \
+        "payment_date: 2020-02-15\n" \
+        "3.\n" \
+        "range: 2020-05-01 ~ 2020-06-30\n" \
+        "rent: 2000\n" \
+        "payment_date: 2020-04-15\n"
+      expect(leasing.to_s).to eq(expected_result)
+    end
+
+    it 'should output rent according to days if month is not a whole' do
+      leasing = Leasing.new('20200115, 20200315, 930, 1')
+      expected_result =
+        "leasing periods:\n" \
+        "1.\n" \
+        "range: 2020-01-15 ~ 2020-01-31\n" \
+        "rent: 510\n" \
+        "payment_date: 2020-01-15\n" \
+        "2.\n" \
+        "range: 2020-02-01 ~ 2020-02-29\n" \
+        "rent: 930\n" \
+        "payment_date: 2020-01-15\n" \
+        "3.\n" \
+        "range: 2020-03-01 ~ 2020-03-15\n" \
+        "rent: 450\n" \
+        "payment_date: 2020-02-15\n"
+      expect(leasing.to_s).to eq(expected_result)
+    end
+
+    it 'should output the first day of leasing if payment date is out of range' do
+      leasing = Leasing.new('20200116, 20200315, 930, 1')
+      expected_result =
+        "leasing periods:\n" \
+        "1.\n" \
+        "range: 2020-01-16 ~ 2020-01-31\n" \
+        "rent: 480\n" \
+        "payment_date: 2020-01-16\n" \
+        "2.\n" \
+        "range: 2020-02-01 ~ 2020-02-29\n" \
+        "rent: 930\n" \
+        "payment_date: 2020-01-16\n" \
+        "3.\n" \
+        "range: 2020-03-01 ~ 2020-03-15\n" \
+        "rent: 450\n" \
+        "payment_date: 2020-02-15\n"
+      expect(leasing.to_s).to eq(expected_result)
+    end
+  end
 end
